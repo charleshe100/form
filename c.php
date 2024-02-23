@@ -32,11 +32,37 @@
             list($width,$height)=getimagesize($source_path);
         break;
     }
-    $dst_path='./imgs/small_'.$_FILES['img']['name'];
-    $dst_width=150;
-    $dst_height=200;
+    $dst_path='./imgs/thumb_'.$_FILES['img']['name']; // 修改
+    $dst_width=300; // 修改
+    $dst_height=300; // 修改
+    $border=30; //新增
     $dst_source=imagecreatetruecolor($dst_width,$dst_height);
-    imagecopyresampled($dst_source,$source,0,0,0,0,$dst_width,$dst_height,$width,$height);
+    // 判斷方向性（新增）
+    if($width==$height){
+        // 正方形
+        $scale=($dst_width-($border*2))/$width;
+        $new_width=$width*$scale;
+        $new_height=$height*$scale;
+        $dst_w_x=$border;
+        $dst_w_y=$border;
+    }else if($width<$height){
+        // 直向
+        $scale=($dst_width-($border*2))/$height;
+        $new_width=$width*$scale;
+        $new_height=$height*$scale;
+        $dst_w_x=$border;
+        $dst_w_y=$border;
+    }else{
+        // 橫向
+        $scale=($dst_width-($border*2))/$width;
+        $new_width=$width*$scale;
+        $new_height=$height*$scale;
+        $dst_w_x=$border;
+        $dst_w_y=$border;
+    }
+
+
+    imagecopyresampled($dst_source,$source,0,0,0,0,$dst_width,$dst_height,$width,$height); //修改
     switch($type){
         case 'image/jpeg':
             imagejpeg($dst_source,$dst_path);

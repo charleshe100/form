@@ -32,11 +32,44 @@ if(!empty($_FILES['img']['tmp_name'])){
             list($width,$height)=getimagesize($src_path);
         break;
     }
-    $dst_path='./imgs/small_'.$_FILES['img']['name'];
-    $dst_width=150;
-    $dst_height=200;
+    $dst_path='./imgs/thumb_'.$_FILES['img']['name'];
+    $dst_width=300; // 修改
+    $dst_height=300; // 修改
+    $border=30; //新增
+
     $dst_src=imagecreatetruecolor($dst_width,$dst_height);
-    imagecopyresampled($dst_src,$src,0,0,0,0,$dst_width,$dst_height,$width,$height);
+    // 新增，設定背景顏色，填入背景顏色
+    $white=imagecolorallocate($dst_src,255,255,255);
+    $red=imagecolorallocate($dst_src,255,0,0);
+    $skyblue=imagecolorallocate($dst_src,122 ,204 ,244);
+    imagefill($dst_src,0,0,$red);
+
+    // 判斷方向性（新增）
+    if($width==$height){
+        // 正方形
+        $scale=($dst_width-($border*2))/$width;
+        $new_width=$width*$scale;
+        $new_height=$height*$scale;
+        $dst_x=$border;
+        $dst_y=$border;
+    }else if($width<$height){
+        // 直向
+        $scale=($dst_width-($border*2))/$height;
+        $new_width=$width*$scale;
+        $new_height=$height*$scale;
+        $dst_x=floor(($dst_width-$new_width)/2);
+        $dst_y=$border;
+    }else{
+        // 橫向
+        $scale=($dst_width-($border*2))/$width;
+        $new_width=$width*$scale;
+        $new_height=$height*$scale;
+        $dst_x=$border;
+        $dst_y=floor(($dst_width-$new_height)/2);
+    }
+
+
+    imagecopyresampled($dst_src,$src,$dst_x,$dst_y,0,0,$new_width,$new_height,$width,$height);
     switch($type){
         case 'image/jpeg':
             imagejpeg($dst_src,$dst_path);
@@ -66,6 +99,7 @@ if(!empty($_FILES['img']['tmp_name'])){
     <style>
         .box{
             text-align: center;
+            margin-top: 20px;
         }
     </style>
 </head>
