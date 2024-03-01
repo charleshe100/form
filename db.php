@@ -1,6 +1,6 @@
 <?php
 date_default_timezone_set("Asia/Taipei");
-$dsn="mysql:host=localhost;charset=utf8;dbname=material";
+$dsn="mysql:host=localhost;charset=utf8;dbname=file";
 $pdo=new PDO($dsn,'root','');
 session_start();
 
@@ -103,6 +103,7 @@ function update($table, $id, $cols)
     return $pdo->exec($sql);
 }
 
+// INSERT INTO `user` (`id`, `acc`, `pw`, `email`) VALUES (NULL, 'test', '5678', 'test@labor.gov.tw'), (NULL, 'admin', '1234', 'admin@labor.gov.tw');
 function insert($table, $values)
 {
     global $pdo;
